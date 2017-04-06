@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Crawler {
 
-	List<String> crawlArticles();
+	List<String> searchArticles(String query);
 	
 }
