@@ -1,4 +1,4 @@
-package newsCrawler;
+package entity.intrfc;
 
 import java.util.List;
 
