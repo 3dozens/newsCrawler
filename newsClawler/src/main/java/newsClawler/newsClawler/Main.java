@@ -1,4 +1,4 @@
-package newsCrawler;
+package newsClawler.newsClawler;
 
 public class Main {
 
