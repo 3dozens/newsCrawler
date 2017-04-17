@@ -21,8 +21,15 @@
     <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
     <directory>${basedir}target</directory>
   </build>
+  
 
   <dependencies>
+    <dependency>
+	  <!-- jsoup HTML parser library @ http://jsoup.org/ -->
+	  <groupId>org.jsoup</groupId>
+	  <artifactId>jsoup</artifactId>
+	  <version>1.10.2</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
