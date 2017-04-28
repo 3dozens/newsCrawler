@@ -24,8 +24,8 @@ public class GoogleSearchEngine implements SearchEngine {
 	private final String CUSTOM_SEARCH_ENGINE_ID;
 	
 	public GoogleSearchEngine() {
-		API_KEY = System.getProperty("api_key"); // VMオプションの-Dなどを使って、事前にシステムプロパティを設定してください
-		CUSTOM_SEARCH_ENGINE_ID = System.getProperty("custom_search_api");
+		this.API_KEY = System.getProperty("api_key"); // VMオプションの-Dなどを使って、事前にシステムプロパティを設定してください
+		this.CUSTOM_SEARCH_ENGINE_ID = System.getProperty("custom_search_api");
 	}
 	
 	/**
@@ -34,49 +34,58 @@ public class GoogleSearchEngine implements SearchEngine {
 	 * @return URL
 	 */
 	public List<String> search(String query) {
-
 		List<GoogleSearchResult> resultList = new ArrayList<>();
 		int startIndex = 1;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			// TODO: ページ数の調整
 			// 1ループ = 1ページ分のリクエスト
+			GoogleSearchResult result = search(query, startIndex);
+			if (result == null) break;
 			
-			// URLの組み立て
-			URL url = null; 
-			try {
-				url = new URL("https://www.googleapis.com/customsearch/v1?"
-						+ "key=" + API_KEY
-						+ "&cx=" + CUSTOM_SEARCH_ENGINE_ID
-						+ "&start=" + startIndex
-						+ "&q="  + URLEncoder.encode(query, "UTF-8"));
-			} catch (MalformedURLException e) { // TODO: 例外をどこで処理するのがベストか?
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-
-			// レスポンスを受け取るReaderの組み立て
-			Reader reader = null;
-			try {
-				reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// APIからレスポンスを受ける
-			// JSONからオブジェクトにマップ
-			// ひとつのGoogleSearchResult = 1ページ分のレスポンス
-			GoogleSearchResult result = new Gson().fromJson(reader, GoogleSearchResult.class);
-			
-			startIndex = result.getQueries().getNextPage().getStartIndex();
 			resultList.add(result);
+			startIndex = result.getQueries().getNextPage().getStartIndex();
 		}
 		
-		List<String> urls = resultList.stream()
-										.flatMap(result -> result.getItems().stream())
-										.map(Item::getLink)
-										.collect(Collectors.toList());
+		// 検索結果からURLを取り出す
+		return resultList.stream()
+							.flatMap(result -> result.getItems().stream())
+							.map(Item::getLink)
+							.collect(Collectors.toList());
+	}
+	
+	/**
+	 * startIndexの位置から検索します
+	 * @param query 検索クエリ
+	 * @param startIndex 検索開始位置
+	 * @return 検索結果URL
+	 */
+	private GoogleSearchResult search(String query, int startIndex) {
+		// URLの組み立て
+		URL url = null; 
+		try { // TODO: dataRistrict 使ってみる？
+			url = new URL("https://www.googleapis.com/customsearch/v1?"
+					+ "key=" + this.API_KEY
+					+ "&cx=" + this.CUSTOM_SEARCH_ENGINE_ID
+					+ "&start=" + startIndex
+					+ "&q="  + URLEncoder.encode(query, "UTF-8"));
+		} catch (MalformedURLException e) { // TODO: 例外をどこで処理するのがベストか?
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+System.out.println(url);
+		// レスポンスを受け取るReaderの組み立て
+		Reader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			System.out.println("item limit reached");
+			return null;
+		}
 
-		return urls;
+		// APIからレスポンスを受ける
+		// JSONからオブジェクトにマップ
+		// ひとつのGoogleSearchResult = 1ページ分のレスポンス
+		return new Gson().fromJson(reader, GoogleSearchResult.class);
 	}
 }
