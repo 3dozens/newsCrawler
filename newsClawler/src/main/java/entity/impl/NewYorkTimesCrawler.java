@@ -2,8 +2,10 @@ package entity.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,21 +24,21 @@ public class NewYorkTimesCrawler implements Crawler {
 	}
 
 	@Override
-	public List<String> searchArticles(String query) {
-		List<String> urls = this.searchEngine.search(query);
+	public Map<String, String> searchArticles(String query, int amount) {
+		List<String> urls = this.searchEngine.search(query, 10);
 		
 		return fetchArticles(urls);
 	}
-
-	private List<String> fetchArticles(List<String> urls) {
+	
+	private Map<String, String> fetchArticles(List<String> urls) {
 		return urls.stream()
 					.map(this::fetchArticle)
-					.filter(article -> !article.equals(""))
-					.collect(Collectors.toList());
+					.filter(article -> !article.getValue().equals(""))
+					.collect(Collectors.toMap(Pair::getKey, Pair::getValue, (a, b) -> a));
 	}
 
-	private String fetchArticle(String url) {
-System.out.println(url);
+	private Pair<String, String> fetchArticle(String url) {
+		System.out.println("Fetching Article: " + url);
 		
 		Response res = null;
 		try {
@@ -44,8 +46,10 @@ System.out.println(url);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// TODO: URL => 文章 の形式にする
+		
 		Document doc = Jsoup.parse(res.body());
-		return doc.getElementsByClass("story-body-text").text();
+		String text = doc.getElementsByClass("story-body-text").text();
+		
+		return Pair.of(url, text); 
 	}
 }

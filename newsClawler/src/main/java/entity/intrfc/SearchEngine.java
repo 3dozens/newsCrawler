@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface SearchEngine {
 
-	public List<String> search(String query);
+	public List<String> search(String query, int amount);
 	
 }
