@@ -9,9 +9,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.*;
 
 import com.google.gson.Gson;
 
@@ -39,11 +40,12 @@ public class GoogleSearchEngine implements SearchEngine {
 		// 必要件数が取れるまで年月を回して検索するメソッド
 		
 		List<String> urlList = new ArrayList<>();
-		int year = 2017;
-		int month = 1;
+		
 		// 2009年飛ばして2008やっちゃった 2007年以降まだです
 		
+		int year = ZonedDateTime.now().getYear();
 		outer: while (true) {
+			int month = 1; 
 			while (month <= 12) {
 				urlList.addAll(search(query, year, month));
 				
@@ -63,13 +65,13 @@ public class GoogleSearchEngine implements SearchEngine {
 		
 		int startIndex = 1;
 		List<String> urlList = new ArrayList<>();
-		while (true) {	
+		while (true) {
 			// 1ループ = 1ページ分のリクエスト
 			GoogleSearchResult result = search(query, year, month, startIndex);
 			if (result == null || result.getItems() == null) break; // result == null 100件検索リミットに到達した
 																			// result.getItems() == null 検索結果が0件だった
 			
-			urlList.addAll(result.getItems().stream().map(Item::getLink).collect(Collectors.toList()));
+			urlList.addAll(result.getItems().stream().map(Item::getLink).collect(toList()));
 			startIndex = result.getQueries().getNextPage().getStartIndex();
 		}
 		
@@ -98,7 +100,7 @@ public class GoogleSearchEngine implements SearchEngine {
 					+ "&cx="         + this.CUSTOM_SEARCH_ENGINE_ID
 					+ "&start="      + startIndex
 					+ "&filter="     + "1" // 重複した結果を排除する
-					+ "&siteSearch=" + URLEncoder.encode(site, "UTF-8")
+					+ "&siteSearch=" + URLEncoder.encode(site,  "UTF-8")
 					+ "&q="          + URLEncoder.encode(query, "UTF-8"));
 		} catch (MalformedURLException e) { // TODO: 例外をどこで処理するのがベストか?
 			e.printStackTrace();
