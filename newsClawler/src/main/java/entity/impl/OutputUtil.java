@@ -24,15 +24,11 @@ public class OutputUtil {
 	 *                    例: 入力ファイル名:sports -> 実際のファイル名:sports_1, sports_2...
 	 */
 	public static void output(Map<String, List<String>> parsed, Path filePath) {
-		try {
-			Files.createDirectories(filePath);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		System.out.println("output to file...");
 		
 		OutputUtil.output(parsed, filePath, OutputUtil.findMaxIndex(filePath) + 1);
 	}
-
+	
 	/**
 	 * パースした文章をファイルに出力します
 	 * 一つの文章ごとに、ファイルをmaxからの連番で出力します

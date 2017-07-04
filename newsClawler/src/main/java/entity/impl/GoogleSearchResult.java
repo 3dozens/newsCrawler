@@ -44,7 +44,12 @@ public class GoogleSearchResult {
 		private List<NextPage> nextPage; // Search APIから、要素がひとつの配列の形のJSONで来る
 
 		public NextPage getNextPage() {
-			return nextPage.get(0); // nextPageは必ず要素がひとつのリストなので、その一件を取り出す
+			try {
+				return nextPage.get(0);
+			} catch (Exception e) {
+				System.out.println("No Next Page"); // TODO: 例外を潰していい?
+				return null;
+			}
 		}
 
 		public void setNextPage(NextPage nextPage) {
