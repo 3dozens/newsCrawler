@@ -1,5 +1,5 @@
 # newsCrawler
-ニュースサイトからニュース記事をクロールします。(開発途中)
+ニュースサイトからニュース記事をクロールします。
 
 # 現状の機能
 * [New York Times](https://www.nytimes.com)サイト内の記事をGoogle Custom Searchを用いてキーワード検索し、指定した件数の結果を取得する
