@@ -36,9 +36,9 @@ public class NewYorkTimesCrawler implements Crawler {
 		String text = null;
 		try {
 			res = Jsoup.connect(url).followRedirects(false).header("cookie", COOKIES).execute();
-			text = Jsoup.parse(res.body()).getElementsByClass("story-body-text").text(); // TODO: 古い記事も story-body-text でいいのか？ → ダメ http://www.nytimes.com/1991/10/21/sports/football-costly-dolphin-fumble-saves-the-oilers.html
+			text = Jsoup.parse(res.body()).getElementsByClass("story-body-text").text();
 			if (StringUtils.isEmpty(text)) {
-				text = Jsoup.parse(res.body()).getElementsByClass("p[itemprop=\"articleBody\"]").text(); // TODO: ここテスト 1995から取れてない
+				text = Jsoup.parse(res.body()).getElementsByClass("p[itemprop=\"articleBody\"]").text();
 			}
 		} catch (Exception e) {
 			System.out.println("an Error occured while Fetching");

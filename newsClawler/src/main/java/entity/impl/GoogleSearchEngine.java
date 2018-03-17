@@ -36,7 +36,7 @@ public class GoogleSearchEngine implements SearchEngine {
 	// for debug
 	public List<String> readURLfromFile() {
 		List<String> urls = new ArrayList<>();
-		try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/kento/develop/data/new_documents/Sports/indoor_sports/ice_hockey/searched_urls"), StandardCharsets.UTF_8)) {
+		try (BufferedReader br = Files.newBufferedReader(Paths.get("searched_urls"), StandardCharsets.UTF_8)) {
 			String line; int i = 1;
 			while ((line = br.readLine()) != null) {
 				urls.add(line); //if (i++ == 100) break;
@@ -81,7 +81,7 @@ public class GoogleSearchEngine implements SearchEngine {
 				}
 				
 				try {
-					Files.write(Paths.get("/home/kento/develop/data/new_documents/Business/lv3/technology/bio/searched_url.txt"), result, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+					Files.write(Paths.get("searched_url.txt"), result, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

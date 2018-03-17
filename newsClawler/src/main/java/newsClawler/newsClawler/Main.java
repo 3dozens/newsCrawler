@@ -36,7 +36,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		String searchQ = "business technology bio";
 		int amount = 1000;
-		String outputPath = "/home/kento/develop/data/new_documents/Business/lv3/technology/bio/bio";
+		String outputPath = "some/output/path";
 		
 		Files.createDirectories(Paths.get(outputPath).getParent());
 		
