@@ -16,14 +16,16 @@ import entity.impl.GoogleSearchEngine;
 import entity.impl.NewYorkTimesCrawler;
 import entity.impl.OutputUtil;
 import entity.intrfc.Crawler;
+import entity.intrfc.SearchEngine;
 
 public class Main {
 
-	private static GoogleSearchEngine searchEngine;
+	private static SearchEngine searchEngine;
 	private static Crawler crawler;
 	private static DocumentParser parser;
 	
 	static {
+		// Dependency Injection
 		searchEngine = new GoogleSearchEngine();
 		crawler = new NewYorkTimesCrawler();
 		Properties properties = new Properties();
@@ -44,7 +46,7 @@ public class Main {
 		
 		Map<String, String> articles = crawler.fetchArticles(urls); // URL => Text
 		
-		Map<String, List<String>> parsed = parse(articles); // URL => [parsed Text]
+		Map<String, List<String>> parsed = parse(articles); // Text => [parsed Text]
 		
 		OutputUtil.output(parsed, Paths.get(outputPath));
 		

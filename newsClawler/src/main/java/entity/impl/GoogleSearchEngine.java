@@ -61,10 +61,9 @@ public class GoogleSearchEngine implements SearchEngine {
 		List<String> urlList = new ArrayList<>();
 		
 		int year = ZonedDateTime.now().getYear();
-			//int year = 2007;
 		int noResultCount = 0;
 		outer: while (true) {
-			int month = 1; //if (year == 2008) month = 6;
+			int month = 1;
 			
 			while (month <= 12) {
 				if (year == ZonedDateTime.now().getYear() && month > ZonedDateTime.now().getMonthValue())
@@ -143,53 +142,6 @@ public class GoogleSearchEngine implements SearchEngine {
 		// URLの組み立て
 		URL url = null; 
 		String site = "www.nytimes.com/" + year + "/" + String.format("%02d", month) + "/*/";
-		try {
-			url = new URL("https://www.googleapis.com/customsearch/v1?"
-					+ "key="         + this.API_KEY
-					+ "&cx="         + this.CUSTOM_SEARCH_ENGINE_ID
-					+ "&start="      + startIndex
-					+ "&filter="     + "1" // 重複した結果を排除する
-					+ "&siteSearch=" + URLEncoder.encode(site,  "UTF-8")
-					+ "&q="          + URLEncoder.encode(query, "UTF-8"));
-		} catch (MalformedURLException e) { // TODO: 例外をどこで処理するのがベストか?
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("Request to Google API: " + url);
-		
-		// レスポンスを受け取るReaderの組み立て
-		Reader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			System.out.println("item limit reached");
-			return null;
-		}
-
-		// APIからレスポンスを受ける
-		// JSONからオブジェクトにマップ
-		// ひとつのGoogleSearchResult = 1ページ分のレスポンス
-		return new Gson().fromJson(reader, GoogleSearchResult.class);
-	}
-	
-	//TODO: New York Timesとの結合をなくす
-	/**
-	 * Google Custom Search API を用いて検索します
-	 * 
-	 * @param query 検索クエリ
-	 * @param year 何年のデータを取得するか
-	 * @param month 何月のデータを取得するか
-	 * @param startIndex 検索開始位置
-	 * @return 検索結果
-	 */
-	public GoogleSearchResult search(String query, String site, int startIndex) {
-		// 実際に検索するレイヤ
-		// Google APIに1リクエストだけ発射するメソッド
-		
-		// URLの組み立て
-		URL url = null; 
 		try {
 			url = new URL("https://www.googleapis.com/customsearch/v1?"
 					+ "key="         + this.API_KEY
